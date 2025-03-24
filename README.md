@@ -1,19 +1,20 @@
-# API Rest de Contatos em Go com SQLite em Memória
+# Contact API in Go with SQLite in Memory
 
-Este projeto é um exemplo de uma API Rest simples desenvolvida em Go, utilizando SQLite em memória para persistir dados. A API permite o gerenciamento de contatos, com operações de criação e leitura.
+This project is an example of a simple REST API developed in Go, using SQLite in memory for data persistence. The API allows contact management with create and read operations.
 
-## Funcionalidades
+## Features
 
-- **GET** `/contacts`: Retorna a lista de todos os contatos cadastrados.
-- **POST** `/contact`: Cria um novo contato.
+- **GET** `/contacts`: Returns the list of all registered contacts.
+- **POST** `/contact`: Creates a new contact.
 
-Cada contato possui as seguintes propriedades:
-- `id`: Identificador único do contato.
-- `name`: Nome do contato.
-- `email`: E-mail do contato.
+Each contact has the following properties:
 
-## Tecnologias Utilizadas
+- `id`: Unique identifier for the contact.
+- `name`: Contact's name.
+- `email`: Contact's email.
 
-- **Go**: Linguagem de programação principal.
-- **SQLite**: Banco de dados em memória para persistência dos dados.
-- **JSON**: Formato para troca de dados entre a API e o cliente.
+## Technologies Used
+
+- **Go**: Main programming language.
+- **SQLite**: In-memory database for data persistence.
+- **JSON**: Format for data exchange between the API and the client.
