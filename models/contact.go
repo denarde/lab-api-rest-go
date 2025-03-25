@@ -50,3 +50,21 @@ func GetContacts(db *sql.DB) ([]Contact, error) {
 	}
 	return contacts, nil
 }
+
+func UpdateContact(db *sql.DB, c Contact) error {
+	query := `UPDATE contacts SET name = ?, email = ? WHERE id = ?`
+	_, err := db.Exec(query, c.Name, c.Email, c.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func DeleteContact(db *sql.DB, id int) error {
+	query := `DELETE FROM contacts WHERE id = ?`
+	_, err := db.Exec(query, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

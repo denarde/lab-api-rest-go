@@ -1,10 +1,12 @@
 # Contacts API - Go + Chi + SQLite (In-Memory) + Logrus
 
-This project is a simple REST API built with Go, using **Chi** for routing, **SQLite (in-memory)** for data persistence, and **Logrus** for structured logging. The API allows managing contacts with create and read operations.
+This project is a simple REST API built with Go, using **Chi** for routing, **SQLite (in-memory)** for data persistence, and **Logrus** for structured logging. The API allows managing contacts with create, read, update, and delete operations.
 
 ## 🚀 Features
 - ✅ **GET /contacts**: Returns the list of all registered contacts.
 - ✅ **POST /contact**: Creates a new contact.
+- ✅ **PUT /contact/{id}**: Updates an existing contact.
+- ✅ **DELETE /contact/{id}**: Deletes a contact by ID.
 - ✅ **Structured logging with Logrus**, ensuring all logs include a `request_id`.
 - ✅ **Automatic request tracing with `X-Request-ID`**, generating it when missing.
 - ✅ **Middleware-based request processing using Chi**.
@@ -46,16 +48,32 @@ curl -X POST http://localhost:8080/contact \
          }'
 ```
 
+#### ✅ Update a Contact (`PUT /contact/{id}`)
+```bash
+curl -X PUT http://localhost:8080/contact/1 \
+     -H "Content-Type: application/json" \
+     -H "X-Request-ID: 123e4567-e89b-12d3-a456-426614174000" \
+     -d '{
+          "name": "Alice Updated",
+          "email": "alice.updated@example.com"
+         }'
+```
+
+#### ✅ Delete a Contact (`DELETE /contact/{id}`)
+```bash
+curl -X DELETE http://localhost:8080/contact/1 \
+     -H "X-Request-ID: 123e4567-e89b-12d3-a456-426614174000"
+```
+
 ### 3️⃣ Check Logs with `X-Request-ID`
 All logs now include a `request_id` for traceability. Example log output:
 ```json
 {
   "level": "info",
   "time": "2025-03-24T12:00:00.123Z",
-  "msg": "Contact created",
+  "msg": "Contact updated",
   "request_id": "123e4567-e89b-12d3-a456-426614174000",
-  "name": "Alice Smith",
-  "email": "alice@example.com"
+  "name": "Alice Updated",
+  "email": "alice.updated@example.com"
 }
 ```
-

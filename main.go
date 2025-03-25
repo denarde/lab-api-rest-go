@@ -1,10 +1,9 @@
 package main
 
 import (
-	"contact-api/handlers"
 	"contact-api/logger"
-	"contact-api/middlewares"
 	"contact-api/models"
+	"contact-api/routes"
 	"database/sql"
 	"fmt"
 	"log"
@@ -27,10 +26,7 @@ func main() {
 
 	r := chi.NewRouter()
 
-	r.Use(middlewares.RequestID)
-
-	r.Get("/contacts", handlers.GetContacts(db))
-	r.Post("/contact", handlers.CreateContact(db))
+	r = routes.SetupRoutes(db)
 
 	fmt.Println("Server running on port 8080...")
 	log.Fatal(http.ListenAndServe(":8080", r))
