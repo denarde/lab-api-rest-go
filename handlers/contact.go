@@ -1,21 +1,27 @@
 package handlers
 
 import (
+	"contact-api/logger"
+	"contact-api/middlewares"
 	"contact-api/models"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
 func GetContacts(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		requestID := middlewares.GetRequestID(r.Context())
+		log := logger.WithRequestID(requestID)
+
 		contacts, err := models.GetContacts(db)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			log.Error("Error fetching contacts", err)
+			http.Error(w, "Error fetching contacts", http.StatusInternalServerError)
 			return
 		}
 
+		log.WithField("count", len(contacts)).Info("Retrieved contacts")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(contacts)
 	}
@@ -23,20 +29,28 @@ func GetContacts(db *sql.DB) http.HandlerFunc {
 
 func CreateContact(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var c models.Contact
-		if err := json.NewDecoder(r.Body).Decode(&c); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+		requestID := middlewares.GetRequestID(r.Context())
+		log := logger.WithRequestID(requestID)
+
+		var contact models.Contact
+		if err := json.NewDecoder(r.Body).Decode(&contact); err != nil {
+			log.Warn("Invalid request body", err)
+			http.Error(w, "Invalid request body", http.StatusBadRequest)
 			return
 		}
 
-		id, err := models.AddContact(db, c)
+		_, err := models.InsertContact(db, contact)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			log.Error("Failed to create contact", err)
+			http.Error(w, "Failed to create contact", http.StatusInternalServerError)
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
+		log.WithFields(map[string]interface{}{
+			"name":  contact.Name,
+			"email": contact.Email,
+		}).Info("Contact created")
+
 		w.WriteHeader(http.StatusCreated)
-		fmt.Fprintf(w, `{"id": %d}`, id)
 	}
 }

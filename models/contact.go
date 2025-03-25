@@ -24,7 +24,7 @@ func CreateTable(db *sql.DB) {
 	}
 }
 
-func AddContact(db *sql.DB, c Contact) (int64, error) {
+func InsertContact(db *sql.DB, c Contact) (int64, error) {
 	query := `INSERT INTO contacts (name, email) VALUES (?, ?)`
 	result, err := db.Exec(query, c.Name, c.Email)
 	if err != nil {
