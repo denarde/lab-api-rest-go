@@ -3,12 +3,20 @@ package models
 import (
 	"database/sql"
 	"log"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type Contact struct {
 	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	Name  string `json:"name" validate:"required,min=3"`
+	Email string `json:"email" validate:"required,email"`
+}
+
+var validate = validator.New()
+
+func (c *Contact) Validate() error {
+	return validate.Struct(c)
 }
 
 func CreateTable(db *sql.DB) {
