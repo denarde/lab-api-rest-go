@@ -13,10 +13,15 @@ func SetupRoutes(db *sql.DB) *chi.Mux {
 
 	r.Use(middlewares.RequestID)
 
-	r.Get("/contacts", handlers.GetContacts(db))
-	r.Post("/contact", handlers.CreateContact(db))
-	r.Put("/contact/{id}", handlers.UpdateContact(db))
-	r.Delete("/contact/{id}", handlers.DeleteContact(db))
+	r.Group(func(r chi.Router) {
+		r.Use(middlewares.AuthMiddleware)
+		r.Get("/contacts", handlers.GetContacts(db))
+		r.Post("/contact", handlers.CreateContact(db))
+		r.Put("/contact/{id}", handlers.UpdateContact(db))
+		r.Delete("/contact/{id}", handlers.DeleteContact(db))
+	})
+
+	r.Post("/login", handlers.Login)
 
 	return r
 }
