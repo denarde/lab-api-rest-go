@@ -41,8 +41,20 @@ func InsertContact(db *sql.DB, c Contact) (int64, error) {
 	return result.LastInsertId()
 }
 
-func GetContacts(db *sql.DB) ([]Contact, error) {
-	rows, err := db.Query("SELECT id, name, email FROM contacts")
+func GetContacts(db *sql.DB, page, limit int, name string) ([]Contact, error) {
+	offset := (page - 1) * limit
+
+	query := "SELECT id, name, email FROM contacts"
+	var args []interface{}
+
+	if name != "" {
+		query += " WHERE name LIKE ?"
+		args = append(args, "%"+name+"%")
+	}
+
+	query += " LIMIT ? OFFSET ?"
+	args = append(args, limit, offset)
+	rows, err := db.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}

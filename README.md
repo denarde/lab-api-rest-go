@@ -1,18 +1,19 @@
 # Contacts API - Go + Chi + SQLite (In-Memory) + Logrus
 
-This project is a simple REST API built with Go, using **Chi** for routing, **SQLite (in-memory)** for data persistence, and **Logrus** for structured logging. The API allows managing contacts with create, read, update, and delete operations.
+This project is a REST API built with Go, using **Chi** for routing, **SQLite (in-memory)** for data persistence, and **Logrus** for structured logging. The API allows managing contacts with create, read, update, and delete operations.
 
 ## 🚀 Features
-- ✅ **GET /contacts**: Returns the list of all registered contacts.
+- ✅ **GET /contacts**: Returns the list of all registered contacts with pagination and filtering support.
 - ✅ **POST /contact**: Creates a new contact.
 - ✅ **PUT /contact/{id}**: Updates an existing contact.
 - ✅ **DELETE /contact/{id}**: Deletes a contact by ID.
 - ✅ **Structured logging with Logrus**, ensuring all logs include a `request_id`.
 - ✅ **Automatic request tracing with `X-Request-ID`**, generating it when missing.
 - ✅ **Middleware-based request processing using Chi**.
-- ✅ **Input validation using go-playground/validator**, ensuring valid email and name formats.
+- ✅ **Input validation using `go-playground/validator`**, ensuring valid email and name formats.
 - ✅ **Standardized error responses**, returning JSON structures with `error.message` and `error.code`.
 - ✅ **JWT-based authentication**, requiring a valid token for protected routes.
+- ✅ **Pagination and filtering** in `GET /contacts` using query parameters (`?page=1&limit=10&name=John`).
 
 ### 📌 Contact Model
 Each contact has the following properties:
@@ -45,16 +46,16 @@ curl -X POST http://localhost:8080/login \
           "password": "password"
          }'
 ```
-_Response:_
+**Response:**
 ```json
 {
   "token": "your-jwt-token-here"
 }
 ```
 
-#### ✅ List Contacts (`GET /contacts`)
+#### ✅ List Contacts (`GET /contacts` with pagination and filtering)
 ```bash
-curl -X GET http://localhost:8080/contacts \
+curl -X GET "http://localhost:8080/contacts?page=1&limit=10&name=John" \
      -H "Authorization: Bearer your-jwt-token-here" \
      -H "X-Request-ID: 123e4567-e89b-12d3-a456-426614174000"
 ```
@@ -113,4 +114,3 @@ All logs now include a `request_id` for traceability. Example log output:
   "email": "alice.updated@example.com"
 }
 ```
-
